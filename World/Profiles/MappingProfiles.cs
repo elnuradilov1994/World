@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using World.Dtos.Auth;
 using World.Dtos.CapitalCity;
 using World.Dtos.Continents;
 using World.Dtos.Country;
 using World.Entities;
+using World.Entities.Auth;
 
 namespace World.Profiles
 {
@@ -18,6 +20,9 @@ namespace World.Profiles
 
             CreateMap<CreateCapitalCityDto, CapitalCity>().ReverseMap();
             CreateMap<UpdateCapitalCityDto, CapitalCity>().ReverseMap();
+
+            CreateMap<AppUser, RegisterDto>().ReverseMap();
+
         }
     }
 }

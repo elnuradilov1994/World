@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,7 @@ namespace World.Controllers
 
 
         [HttpGet]
+        [Authorize("User")]
         public async Task<IActionResult> GetAllCapitalCities()
         {
             var result = await _context.CapitalCities.ToListAsync();

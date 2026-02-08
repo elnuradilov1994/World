@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using World.DAL;
 
@@ -11,9 +12,11 @@ using World.DAL;
 namespace World.DAL.Migrations
 {
     [DbContext(typeof(WoldDbContext))]
-    partial class WoldDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260208145310_identitysystems")]
+    partial class identitysystems
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
