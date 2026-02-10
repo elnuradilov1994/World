@@ -6,9 +6,9 @@ using World.Entities.Auth;
 
 namespace World.DAL
 {
-    public class WoldDbContext : IdentityDbContext<AppUser>
+    public class WorldDbContext : IdentityDbContext<AppUser>
     {
-        public WoldDbContext(DbContextOptions<WoldDbContext> options) : base(options)
+        public WorldDbContext(DbContextOptions<WorldDbContext> options) : base(options)
         {
         }
 

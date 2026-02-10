@@ -22,4 +22,8 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DAL\Repositories\Concrete\Dapper\" />
+  </ItemGroup>
+
 </Project>

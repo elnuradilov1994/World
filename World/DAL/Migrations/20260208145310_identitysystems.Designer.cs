@@ -11,7 +11,7 @@ using World.DAL;
 
 namespace World.DAL.Migrations
 {
-    [DbContext(typeof(WoldDbContext))]
+    [DbContext(typeof(WorldDbContext))]
     [Migration("20260208145310_identitysystems")]
     partial class identitysystems
     {

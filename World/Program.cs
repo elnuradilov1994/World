@@ -7,20 +7,23 @@ using System;
 using System.Reflection;
 using System.Text;
 using World.DAL;
+using World.DAL.Repositories.Abstact;
+using World.DAL.Repositories.Concrete.EntityFramework;
 using World.Entities.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddScoped<ICountryRepository, EfCountryRepository>();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
-builder.Services.AddDbContext<WoldDbContext>(opt =>
+builder.Services.AddDbContext<WorldDbContext>(opt =>
 {
     opt.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
 });
 builder.Services.AddIdentity<AppUser, IdentityRole>()
-    .AddEntityFrameworkStores<WoldDbContext>()
+    .AddEntityFrameworkStores<WorldDbContext>()
     .AddDefaultTokenProviders();
 builder.Services.AddAuthentication(opt =>
 {

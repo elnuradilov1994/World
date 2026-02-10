@@ -14,10 +14,10 @@ namespace World.Controllers
     [ApiController]
     public class CapitalCitiesController : ControllerBase
     {
-        private readonly WoldDbContext _context;
+        private readonly WorldDbContext _context;
         private readonly IMapper _mapper;
 
-        public CapitalCitiesController(WoldDbContext context, IMapper mapper)
+        public CapitalCitiesController(WorldDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

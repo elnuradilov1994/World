@@ -12,10 +12,10 @@ namespace World.Controllers
     [ApiController]
     public class ContinentsController : ControllerBase
     {
-        private readonly WoldDbContext _context;
+        private readonly WorldDbContext _context;
         private readonly IMapper _mapper;
 
-        public ContinentsController(WoldDbContext context, IMapper mapper)
+        public ContinentsController(WorldDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

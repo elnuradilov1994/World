@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using World.DAL;
+using World.DAL.Repositories.Abstact;
 using World.Dtos.Continents;
 using World.Dtos.Country;
 using World.Entities;
@@ -13,56 +14,53 @@ namespace World.Controllers
     [ApiController]
     public class CountriesController : ControllerBase
     {
-        private readonly WoldDbContext _context;
+        private readonly ICountryRepository _repo;
         private readonly IMapper _mapper;
 
-        public CountriesController(WoldDbContext context, IMapper mapper)
+        public CountriesController(ICountryRepository repo, IMapper mapper)
         {
-            _context = context;
+            _repo = repo;
             _mapper = mapper;
         }
-
 
         [HttpGet]
         public async Task<IActionResult> GetAllCountries()
         {
-            var result = await _context.Countries.ToListAsync();
-            return Ok(result);
+            return Ok(await _repo.GetCountriesAsync());
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCountryById(int id)
+        public async Task<IActionResult> GetCountry(int id)
         {
-            var result = await _context.Countries.FirstOrDefaultAsync(c => c.Id == id);
-            return Ok(result);
+            return Ok(await _repo.GetCountryAsync(c=>c.Id == id));
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCountry(CreateCountryDto countryDto)
+        public async Task<IActionResult> CreateCountry(CreateCountryDto create)
         {
-            var result = _mapper.Map<Country>(countryDto);
-            await _context.Countries.AddAsync(result);
-            await _context.SaveChangesAsync();
-            return Ok();
+            var country = _mapper.Map<Country>(create);
+            await _repo.CreateCountryAsync(country);
+            await _repo.SaveAsync();
+            return Ok(country);
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteCountry(int id)
+        public async Task<IActionResult> RemoveCountry(int id)
         {
-            var deleted = await _context.Countries.FirstOrDefaultAsync(c => c.Id == id);
-            _context.Countries.Remove(deleted);
-            await _context.SaveChangesAsync();
-            return Ok();
+            var deleted = await _repo.GetCountryAsync(c => c.Id == id);
+             _repo.DeleteCountryAsync(deleted);
+            await _repo.SaveAsync();
+            return Ok(deleted);
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateCountry(UpdateCountryDto updateCountry, int id)
+        public async Task<IActionResult> UpdateCountry(int id,UpdateCountryDto update)
         {
-            var updated = await _context.Continents.FirstOrDefaultAsync(c => c.Id == id);
-            var result = _mapper.Map(updateCountry, updated);
-            _context.Continents.Remove(result);
-            await _context.SaveChangesAsync();
-            return Ok();
+            var updated = await _repo.GetCountryAsync(c => c.Id == id);
+            _mapper.Map(update,updated);
+            _repo.UpdateCountryAsync(updated);
+            await _repo.SaveAsync();
+            return Ok(updated);
         }
     }
 }

@@ -10,7 +10,7 @@ using World.DAL;
 
 namespace World.DAL.Migrations
 {
-    [DbContext(typeof(WoldDbContext))]
+    [DbContext(typeof(WorldDbContext))]
     partial class WoldDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

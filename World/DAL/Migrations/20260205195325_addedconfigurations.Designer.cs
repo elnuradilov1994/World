@@ -10,7 +10,7 @@ using World.DAL;
 
 namespace World.DAL.Migrations
 {
-    [DbContext(typeof(WoldDbContext))]
+    [DbContext(typeof(WorldDbContext))]
     [Migration("20260205195325_addedconfigurations")]
     partial class addedconfigurations
     {
