@@ -6,6 +6,8 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Reflection;
 using System.Text;
+using World.Core.DAL.Repositories.Abstract;
+using World.Core.DAL.Repositories.Concrete.EntityFramework;
 using World.DAL;
 using World.DAL.Repositories.Abstact;
 using World.DAL.Repositories.Concrete.EntityFramework;
@@ -14,7 +16,10 @@ using World.Entities.Auth;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddScoped<IContinentRepository, EfContinentRepository>();
 builder.Services.AddScoped<ICountryRepository, EfCountryRepository>();
+builder.Services.AddScoped<ICityRepository, EfCityRepository>();
+
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());

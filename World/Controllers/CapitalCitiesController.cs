@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using World.DAL;
+using World.DAL.Repositories.Abstact;
 using World.Dtos.CapitalCity;
 using World.Dtos.Country;
 using World.Entities;
@@ -14,13 +15,13 @@ namespace World.Controllers
     [ApiController]
     public class CapitalCitiesController : ControllerBase
     {
-        private readonly WorldDbContext _context;
+        private readonly ICityRepository _repo;
         private readonly IMapper _mapper;
 
-        public CapitalCitiesController(WorldDbContext context, IMapper mapper)
+        public CapitalCitiesController(WorldDbContext context, IMapper mapper, ICityRepository repo)
         {
-            _context = context;
             _mapper = mapper;
+            _repo = repo;
         }
 
 
@@ -28,14 +29,14 @@ namespace World.Controllers
         [Authorize("User")]
         public async Task<IActionResult> GetAllCapitalCities()
         {
-            var result = await _context.CapitalCities.ToListAsync();
+            var result = await _repo.GetAllAsync();
             return Ok(result);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetCapitalCityById(int id)
         {
-            var result = await _context.CapitalCities.FirstOrDefaultAsync(c => c.Id == id);
+            var result = await _repo.GetAsync(c => c.Id == id);
             return Ok(result);
         }
 
@@ -44,8 +45,8 @@ namespace World.Controllers
         public async Task<IActionResult> CreateCapitalCity(CreateCapitalCityDto cityDto)
         {
             var result = _mapper.Map<CapitalCity>(cityDto);
-            await _context.CapitalCities.AddAsync(result);
-            await _context.SaveChangesAsync();
+            await _repo.AddAsync(result);
+            await _repo.SaveAsync();
             return Ok();
         }
 
@@ -53,9 +54,9 @@ namespace World.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteCapitalCity(int id)
         {
-            var deleted = await _context.CapitalCities.FirstOrDefaultAsync(c => c.Id == id);
-            _context.CapitalCities.Remove(deleted);
-            await _context.SaveChangesAsync();
+            var deleted = await _repo.GetAsync(c => c.Id == id);
+            _repo.RemoveAsync(deleted);
+            await _repo.SaveAsync();
             return Ok();
         }
 
@@ -63,10 +64,10 @@ namespace World.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateCapitalCity(UpdateCapitalCityDto updateCityDto , int id)
         {
-            var updated = await _context.CapitalCities.FirstOrDefaultAsync(c => c.Id == id);
+            var updated = await _repo.GetAsync(c => c.Id == id);
             var result = _mapper.Map(updateCityDto, updated);
-            _context.CapitalCities.Remove(result);
-            await _context.SaveChangesAsync();
+            _repo.UpdateAsync(result);
+            await _repo.SaveAsync();
             return Ok();
         }
     }

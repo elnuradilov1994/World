@@ -26,20 +26,26 @@ namespace World.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllCountries()
         {
-            return Ok(await _repo.GetCountriesAsync());
+            return Ok(await _repo.GetAllAsync());
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCountriesPaginate(int page,int size)
+        {
+            return Ok(await _repo.GetAllPaginatedAsync(page,size));
         }
 
         [HttpGet]
         public async Task<IActionResult> GetCountry(int id)
         {
-            return Ok(await _repo.GetCountryAsync(c=>c.Id == id));
+            return Ok(await _repo.GetAsync(c=>c.Id == id));
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateCountry(CreateCountryDto create)
         {
             var country = _mapper.Map<Country>(create);
-            await _repo.CreateCountryAsync(country);
+            await _repo.AddAsync(country);
             await _repo.SaveAsync();
             return Ok(country);
         }
@@ -47,8 +53,8 @@ namespace World.Controllers
         [HttpDelete]
         public async Task<IActionResult> RemoveCountry(int id)
         {
-            var deleted = await _repo.GetCountryAsync(c => c.Id == id);
-             _repo.DeleteCountryAsync(deleted);
+            var deleted = await _repo.GetAsync(c => c.Id == id);
+             _repo.RemoveAsync(deleted);
             await _repo.SaveAsync();
             return Ok(deleted);
         }
@@ -56,9 +62,9 @@ namespace World.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateCountry(int id,UpdateCountryDto update)
         {
-            var updated = await _repo.GetCountryAsync(c => c.Id == id);
+            var updated = await _repo.GetAsync(c => c.Id == id);
             _mapper.Map(update,updated);
-            _repo.UpdateCountryAsync(updated);
+            _repo.UpdateAsync(updated);
             await _repo.SaveAsync();
             return Ok(updated);
         }

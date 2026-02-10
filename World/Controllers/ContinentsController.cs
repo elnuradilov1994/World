@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using World.DAL;
+using World.DAL.Repositories.Abstact;
 using World.Dtos.Continents;
 using World.Entities;
 
@@ -12,27 +13,27 @@ namespace World.Controllers
     [ApiController]
     public class ContinentsController : ControllerBase
     {
-        private readonly WorldDbContext _context;
+        private readonly IContinentRepository _repo;
         private readonly IMapper _mapper;
 
-        public ContinentsController(WorldDbContext context, IMapper mapper)
+        public ContinentsController(WorldDbContext context, IMapper mapper, IContinentRepository repo)
         {
-            _context = context;
             _mapper = mapper;
+            _repo = repo;
         }
 
 
         [HttpGet]
         public async Task<IActionResult> GetAllContinents()
         {
-            var result = await _context.Continents.ToListAsync();
+            var result = await _repo.GetAllAsync();
             return Ok(result);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetContinentById(int id)
         {
-            var result = await _context.Continents.FirstOrDefaultAsync(c=> c.Id == id);
+            var result = await _repo.GetAsync(c=> c.Id == id);
             return Ok(result);
         }
 
@@ -40,27 +41,27 @@ namespace World.Controllers
         public async Task<IActionResult> CreateContinent(CreateContinentDto continentDto)
         {
             var result = _mapper.Map<Continent>(continentDto);
-            await _context.Continents.AddAsync(result);
-            await _context.SaveChangesAsync();
+            await _repo.AddAsync(result);
+            await _repo.SaveAsync();
             return Ok();
         }
 
         [HttpDelete]
         public async Task<IActionResult> DeleteContinent(int id)
         {
-            var deleted = await _context.Continents.FirstOrDefaultAsync(c => c.Id == id);
-            _context.Continents.Remove(deleted);
-            await _context.SaveChangesAsync();
+            var deleted = await _repo.GetAsync(c => c.Id == id);
+            _repo.RemoveAsync(deleted);
+            await _repo.SaveAsync();
             return Ok();
         }
 
         [HttpPut]
         public async Task<IActionResult> UpdateContinent(UpdateContinentDto updateContinent, int id)
         {
-            var updated = await _context.Continents.FirstOrDefaultAsync(c => c.Id == id);
+            var updated = await _repo.GetAsync(c => c.Id == id);
             var result = _mapper.Map(updateContinent,updated);
-            _context.Continents.Remove(result);
-            await _context.SaveChangesAsync();
+            _repo.UpdateAsync(result);
+            await _repo.SaveAsync();
             return Ok();
         }
     }
