@@ -7,6 +7,7 @@ using World.DAL.Repositories.Abstact;
 using World.Dtos.Continents;
 using World.Dtos.Country;
 using World.Entities;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace World.Controllers
 {
@@ -24,10 +25,21 @@ namespace World.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllCountries()
+        public async Task<ActionResult> GetAllCountries()
         {
-            return Ok(await _repo.GetAllAsync());
-        }
+            var countries = await _repo.GetAllAsync(null, "Continent", "CapitalCity");
+            var result = countries.Select(c => new GetAllDto
+            {
+                Id = c.Id,
+                Name = c.Name,
+                ContinentName = c.Continent != null ? c.Continent.Name : null,
+                CapitalCityName = c.CapitalCity != null ? c.CapitalCity.Name : null
+
+            }).ToList();
+
+        return Ok(result);
+        }  
+        
 
         [HttpGet]
         public async Task<IActionResult> GetCountriesPaginate(int page,int size)
